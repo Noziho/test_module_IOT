@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit OperatingHistory{% endblock %}
+
+{% block body %}
+    <h1>Edit OperatingHistory</h1>
+
+    {{ include('operating_history/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_operating_history_index') }}">back to list</a>
+
+    {{ include('operating_history/_delete_form.html.twig') }}
+{% endblock %}

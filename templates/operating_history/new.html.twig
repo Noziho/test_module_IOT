@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New OperatingHistory{% endblock %}
+
+{% block body %}
+    <h1>Create new OperatingHistory</h1>
+
+    {{ include('operating_history/_form.html.twig') }}
+
+    <a href="{{ path('app_operating_history_index') }}">back to list</a>
+{% endblock %}

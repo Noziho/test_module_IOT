@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OperatingHistory index{% endblock %}
+
+{% block body %}
+    <h1>OperatingHistory index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Duration</th>
+                <th>Status</th>
+                <th>ConsumedData</th>
+                <th>DataSent</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for operating_history in operating_histories %}
+            <tr>
+                <td>{{ operating_history.id }}</td>
+                <td>{{ operating_history.date ? operating_history.date|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ operating_history.duration }}</td>
+                <td>{{ operating_history.status }}</td>
+                <td>{{ operating_history.consumedData }}</td>
+                <td>{{ operating_history.dataSent }}</td>
+                <td>
+                    <a href="{{ path('app_operating_history_show', {'id': operating_history.id}) }}">show</a>
+                    <a href="{{ path('app_operating_history_edit', {'id': operating_history.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_operating_history_new') }}">Create new</a>
+{% endblock %}
