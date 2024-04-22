@@ -19,6 +19,9 @@ class Detail
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $serialNumber = null;
 
+    #[ORM\ManyToOne(inversedBy: 'detail')]
+    private ?Module $module = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,18 @@ class Detail
     public function setSerialNumber(?string $serialNumber): static
     {
         $this->serialNumber = $serialNumber;
+
+        return $this;
+    }
+
+    public function getModule(): ?Module
+    {
+        return $this->module;
+    }
+
+    public function setModule(?Module $module): static
+    {
+        $this->module = $module;
 
         return $this;
     }

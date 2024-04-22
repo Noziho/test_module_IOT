@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Module;
 use App\Form\ModuleType;
 use App\Repository\ModuleRepository;
+use App\Service\ModuleService;
 use Doctrine\ORM\EntityManagerInterface;
+use JetBrains\PhpStorm\NoReturn;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,11 +16,26 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/module')]
 class ModuleController extends AbstractController
 {
+
+    private ModuleService $moduleService;
+    private ModuleRepository $moduleRepository;
+
+    /**
+     * @param ModuleService $moduleService
+     * @param ModuleRepository $moduleRepository
+     */
+    public function __construct(ModuleService $moduleService, ModuleRepository $moduleRepository)
+    {
+        $this->moduleService = $moduleService;
+        $this->moduleRepository = $moduleRepository;
+    }
+
+
     #[Route('/', name: 'app_module_index', methods: ['GET'])]
     public function index(ModuleRepository $moduleRepository): Response
     {
         return $this->render('module/index.html.twig', [
-            'modules' => $moduleRepository->findAll(),
+            'modules' => $this->moduleRepository->findAll(),
         ]);
     }
 
@@ -77,5 +94,15 @@ class ModuleController extends AbstractController
         }
 
         return $this->redirectToRoute('app_module_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/generate', name: 'app_module_generate', methods: ['GET'], priority: 999)]
+    public function generate()
+    {
+
+        $this->moduleService->generate();
+        return $this->render('module/index.html.twig', [
+            'modules' => $this->moduleRepository->findAll(),
+        ]);
     }
 }

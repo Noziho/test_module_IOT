@@ -29,6 +29,9 @@ class OperatingHistory
     #[ORM\Column(nullable: true)]
     private ?int $dataSent = null;
 
+    #[ORM\ManyToOne(inversedBy: 'OperatingHistory')]
+    private ?Module $module = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +93,18 @@ class OperatingHistory
     public function setDataSent(?int $dataSent): static
     {
         $this->dataSent = $dataSent;
+
+        return $this;
+    }
+
+    public function getModule(): ?Module
+    {
+        return $this->module;
+    }
+
+    public function setModule(?Module $module): static
+    {
+        $this->module = $module;
 
         return $this;
     }
