@@ -34,14 +34,18 @@ class OperatingHistoryService
         foreach ($modules as $module) {
             $data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
             $status = ['En fonctionnement', 'Hors service', 'Eteint'];
+            $randomStatus = $status[array_rand($status)];
             //get a random module to set a random operating history to it.
             $operatingHistory = new OperatingHistory();
             $operatingHistory->setModule($module);
-            $operatingHistory->setStatus($status[array_rand($status)]);
+            $operatingHistory->setStatus($randomStatus);
             $operatingHistory->setDate(new DateTime());
-            $operatingHistory->setDuration($data[array_rand($data)]);
-            $operatingHistory->setConsumedData($data[array_rand($data)]);
-            $operatingHistory->setDataSent($data[array_rand($data)]);
+            if ($operatingHistory->getStatus() === 'En fonctionnement') {
+                $operatingHistory->setDuration($data[array_rand($data)]);
+                $operatingHistory->setConsumedData($data[array_rand($data)]);
+                $operatingHistory->setDataSent($data[array_rand($data)]);
+            }
+
             $this->entityManager->persist($operatingHistory);
         }
         $this->entityManager->flush();

@@ -4,36 +4,33 @@
 
 {% block body %}
 
+    <div class="p-4">
+        <h1>Listes des différents modules</h1>
+        <span>Les données présentes sur les modules sont les dernières données collectées depuis l'historique de fonctionnement des modules</span>
+    </div>
     {% if modules|length > 0 %}
-        <h1>Module index</h1>
-
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>actions</th>
-            </tr>
-            </thead>
-            <tbody>
+        <div id="moduleContainer">
             {% for module in modules %}
-                <tr>
-                    <td>{{ module.id }}</td>
-                    <td>{{ module.name }}</td>
-                    <td>{{ module.description }}</td>
-                    <td>
-                        <a href="{{ path('app_module_show', {'id': module.id}) }}">show</a>
-                        <a href="{{ path('app_module_edit', {'id': module.id}) }}">edit</a>
-                    </td>
-                </tr>
+                {% set lastHistory = module.operatingHistory|last %}
+
+                <div class="card m-2">
+                    <div class="card-body w-100">
+                        <h5 class="card-title">{{ module.name }}</h5>
+                        <p class="card-text"> id: {{ module.id }}</p>
+                        <p class="card-text"> Description: {{ module.description }}</p>
+                        <p>Status: {{ lastHistory.status }}</p>
+                        <p>Durée d'utilisation actuelle (h): {{ lastHistory.duration }}</p>
+                        <p>Données consommées (go): {{ lastHistory.consumedData }}</p>
+                        <p>Données envoyées (go): {{ lastHistory.dataSent }}</p>
+                        <a href="{{ path('app_module_show', {'id': module.id}) }}" class="btn btn-primary">show</a>
+                        <a href="{{ path('app_module_edit', {'id': module.id}) }}" class="btn btn-primary">edit</a>
+                    </div>
+                </div>
+
             {% else %}
-                <tr>
-                    <td colspan="4">no records found</td>
-                </tr>
+                    <span>no records found</span>
             {% endfor %}
-            </tbody>
-        </table>
+        </div>
 
         <a href="{{ path('app_module_new') }}">
             <button class="btn">Créez un module</button>
