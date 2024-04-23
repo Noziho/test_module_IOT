@@ -4,16 +4,33 @@ namespace App\Controller;
 
 use App\Entity\OperatingHistory;
 use App\Form\OperatingHistoryType;
+use App\Repository\ModuleRepository;
 use App\Repository\OperatingHistoryRepository;
+use App\Service\OperatingHistoryService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/operating/history')]
+#[Route('/operatingHistory')]
 class OperatingHistoryController extends AbstractController
 {
+
+    private OperatingHistoryService $historyService;
+    private ModuleRepository $moduleRepository;
+
+    /**
+     * @param OperatingHistoryService $historyService
+     * @param ModuleRepository $moduleRepository
+     */
+    public function __construct(OperatingHistoryService $historyService, ModuleRepository $moduleRepository)
+    {
+        $this->historyService = $historyService;
+        $this->moduleRepository = $moduleRepository;
+    }
+
+
     #[Route('/', name: 'app_operating_history_index', methods: ['GET'])]
     public function index(OperatingHistoryRepository $operatingHistoryRepository): Response
     {
@@ -77,5 +94,14 @@ class OperatingHistoryController extends AbstractController
         }
 
         return $this->redirectToRoute('app_operating_history_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/random', name: 'app_operating_history_random', priority: 10)]
+    public function generateRandomOperatingHistory(): Response
+    {
+        $this->historyService->generateRandomOperatingHistory();
+        return $this->render('module/index.html.twig', [
+            'modules' => $this->moduleRepository->findAll(),
+        ]);
     }
 }

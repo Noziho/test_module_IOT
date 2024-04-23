@@ -97,7 +97,7 @@ class ModuleController extends AbstractController
     }
 
     #[Route('/generate', name: 'app_module_generate', methods: ['GET'], priority: 999)]
-    public function generate()
+    public function generate(): Response
     {
 
         $this->moduleService->generate();

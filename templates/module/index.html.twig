@@ -35,8 +35,13 @@
             </tbody>
         </table>
 
-        <a href="{{ path('app_module_new') }}">Create new</a>
+        <a href="{{ path('app_module_new') }}">
+            <button class="btn">Créez un module</button>
+        </a>
 
+        <a href="{{ path('app_operating_history_random') }}">
+            <button class="btn">Générer un historique (automatique)</button>
+        </a>
     {% else %}
     <h1>Aucun module n'a été trouvé vueillez en crééé</h1>
     <div class="container">
