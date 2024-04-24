@@ -3,27 +3,38 @@
 {% block title %}Module index{% endblock %}
 
 {% block body %}
-
     <div class="p-4">
         <h1>Listes des différents modules</h1>
         <span>Les données présentes sur les modules sont les dernières données collectées depuis l'historique de fonctionnement des modules</span>
     </div>
+
+    {% for type, messages in app.flashes %}
+        <div class="overflow-y-scroll messageContainer">
+            {% for message in messages %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
     {% if modules|length > 0 %}
         <div id="moduleContainer">
             {% for module in modules %}
+
                 {% set lastHistory = module.operatingHistory|last %}
 
                 <div class="card m-2">
                     <div class="card-body w-100">
-                        <h5 class="card-title">{{ module.name }}</h5>
+                        <h3 class="card-title">{{ module.name }}</h3>
                         <p class="card-text"> id: {{ module.id }}</p>
                         <p class="card-text"> Description: {{ module.description }}</p>
                         <p>Status: {{ lastHistory.status }}</p>
                         <p>Durée d'utilisation actuelle (h): {{ lastHistory.duration }}</p>
                         <p>Données consommées (go): {{ lastHistory.consumedData }}</p>
                         <p>Données envoyées (go): {{ lastHistory.dataSent }}</p>
-                        <a href="{{ path('app_module_show', {'id': module.id}) }}" class="btn btn-primary">show</a>
-                        <a href="{{ path('app_module_edit', {'id': module.id}) }}" class="btn btn-primary">edit</a>
+                        <a href="{{ path('app_module_show', {'id': module.id}) }}" class="btn btn-primary">Voir</a>
+                        <a href="{{ path('app_module_edit', {'id': module.id}) }}" class="btn btn-primary">Modifier</a>
                     </div>
                 </div>
 
@@ -36,14 +47,12 @@
             <button class="btn">Créez un module</button>
         </a>
 
-        <a href="{{ path('app_operating_history_random') }}">
-            <button class="btn">Générer un historique (automatique)</button>
-        </a>
+
     {% else %}
     <h1>Aucun module n'a été trouvé vueillez en crééé</h1>
     <div class="container">
         <div class="btn_container">
-            <button class="btn" id="automatic_btn">Créer un module (automatique)</button>
+            <button class="btn" id="automatic_btn">Créer 10 module (automatique)</button>
         </div>
     </div>
     {% endif %}

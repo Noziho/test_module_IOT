@@ -34,6 +34,15 @@ class ModuleController extends AbstractController
     #[Route('/', name: 'app_module_index', methods: ['GET'])]
     public function index(ModuleRepository $moduleRepository): Response
     {
+        $modules = $this->moduleRepository->findAll();
+        foreach ($modules as $module){
+            $operatingHistory = $module->getOperatingHistory();
+            $lastOperatingHistory = $operatingHistory[sizeof($operatingHistory) -1];
+
+            if($lastOperatingHistory->getStatus() === "Hors service"){
+                $this->addFlash('danger', "Le module " . $module->getId() . " est hors service");
+            }
+        }
         return $this->render('module/index.html.twig', [
             'modules' => $this->moduleRepository->findAll(),
         ]);
@@ -97,12 +106,8 @@ class ModuleController extends AbstractController
     }
 
     #[Route('/generate', name: 'app_module_generate', methods: ['GET'], priority: 999)]
-    public function generate(): Response
+    public function generate()
     {
-
         $this->moduleService->generate();
-        return $this->render('module/index.html.twig', [
-            'modules' => $this->moduleRepository->findAll(),
-        ]);
     }
 }
