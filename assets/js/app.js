@@ -1,26 +1,89 @@
+import Chart from 'chart.js/auto';
+
 let startBtn = document.querySelector('#startBtn');
 let automaticBtn = document.querySelector('#automatic_btn');
-let card = document.querySelector('.card');
-let cardTitle = document.querySelectorAll('.card-title');
+let card = document.querySelectorAll('.card');
 let duration = document.querySelectorAll('.duration');
 let dataConsumed = document.querySelectorAll('.dataConsumed');
 let sentData = document.querySelectorAll('.sentData');
 let status = document.querySelectorAll('.status');
 let ids = document.querySelectorAll('.id');
+//Used to stock each module on it.
 let modules = [];
+//An array which will contains each charts generated above.
+let charts = [];
 
+/**
+ *
+ * @param chart the chart u want to add something into.
+ * @param label the label according to the data.
+ * @param data the data u want to add in.
+ * This function is here to add data into a given chart
+ */
+function addData(chart, label, data) {
+    chart.data.labels.push(label);
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(data);
+    });
+    chart.update();
+}
+
+/**
+ *
+ * @param chart the chart u want to remove data of.
+ */
+function removeData(chart) {
+    chart.data.labels.pop();
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+    });
+    chart.update();
+}
+
+//Generate all canvas for create new charts for each module.
+for (let i = 0; i < ids.length; i++) {
+    let canvas = document.createElement('canvas');
+    canvas.id = "canvas" + i;
+    card[i].append(canvas);
+
+    let ctx = document.getElementById('canvas' + i);
+
+    charts.push(
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Données consommées', 'Données envoyées'],
+                datasets: [{
+                    label: 'Données utilisé/envoyées en go',
+                    data: [0, 0],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        })
+    )
+}
+
+//Adding click event for redirect.
 if (startBtn) {
     startBtn.addEventListener('click', () => {
         window.location.href = 'http://localhost:8000/module';
     });
 }
-
+//Adding click event for redirect.
 if (automaticBtn) {
     automaticBtn.addEventListener('click', () => {
         window.location.href = 'http://localhost:8000/module/generate';
     });
 }
 
+//Fetching to get all module data including details and operatingHistory
 fetch('http://localhost:8000/module/getAll')
     .then(r => r.json())
     .then(r => {
@@ -30,9 +93,11 @@ fetch('http://localhost:8000/module/getAll')
 
         if (modules.length > 0) {
             setInterval(() => {
+                //Fetching to generate a random OperatingHistory for all module
                 fetch('http://localhost:8000/operatingHistory/random')
                     .then(r => r.json())
                     .then(r => {
+                        //This loop refresh diplay every 30 sec
                         for (let i = 0; i < ids.length; i++) {
                             let OperatingHistoryDuration = r[i].OperatingHistory[r[i].OperatingHistory.length -1].duration;
                             let OperatingHistoryData = r[i].OperatingHistory[r[i].OperatingHistory.length -1].consumedData;
@@ -40,6 +105,14 @@ fetch('http://localhost:8000/module/getAll')
                             let OperatingHistoryStatus = r[i].OperatingHistory[r[i].OperatingHistory.length -1].status;
 
                             status[i].innerHTML= "Status: " + OperatingHistoryStatus;
+
+                            let canvas = document.getElementById('canvas' + i)
+                            //Removing old data
+                            removeData(charts[i])
+                            removeData(charts[i])
+                            //Add new data to the charts
+                            addData(charts[i], 'Données consomées', OperatingHistoryData)
+                            addData(charts[i], 'Données envoyées', OperatingHistorySentData)
 
                             if (!OperatingHistoryDuration) {
                                 duration[i].innerHTML= "Durée d'utilisation actuelle (h): ";
@@ -63,11 +136,9 @@ fetch('http://localhost:8000/module/getAll')
                             }
                         }
                     })
-            }, 10000);
+            }, 30000);
         }
     })
-console.log(modules.length);
-
 
 import '../styles/app.css';
 import '/node_modules/bootstrap/dist/css/bootstrap.css';

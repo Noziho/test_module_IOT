@@ -19,7 +19,7 @@
     {% endfor %}
 
     {% if modules|length > 0 %}
-        <div id="moduleContainer">
+        <div id="moduleContainer" class="overflow-y-scroll">
             {% for module in modules %}
 
                 {% set lastHistory = module.operatingHistory|last %}
@@ -36,31 +36,6 @@
                         <a href="{{ path('app_module_show', {'id': module.id}) }}" class="btn btn-primary">Voir</a>
                         <a href="{{ path('app_module_edit', {'id': module.id}) }}" class="btn btn-primary">Modifier</a>
                     </div>
-{#                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>#}
-
-{#                    <script>#}
-{#                        const ctx = document.getElementById('myChart');#}
-
-{#                        new Chart(ctx, {#}
-{#                            type: 'bar',#}
-{#                            data: {#}
-{#                                labels: ['Dernières 30 sec'],#}
-{#                                datasets: [{#}
-{#                                    label: 'Données utilisé en go',#}
-{#                                    data: [{{ lastHistory.consumedData }}],#}
-{#                                    borderWidth: 1#}
-{#                                }]#}
-{#                            },#}
-{#                            options: {#}
-{#                                scales: {#}
-{#                                    y: {#}
-{#                                        beginAtZero: true#}
-{#                                    }#}
-{#                                }#}
-{#                            }#}
-{#                        });#}
-{#                    </script>#}
-{#                #}
                 </div>
 
             {% else %}
@@ -68,9 +43,12 @@
             {% endfor %}
         </div>
 
-        <a href="{{ path('app_module_new') }}">
-            <button class="btn">Créez un module</button>
-        </a>
+        <div class="newModuleContainer">
+            <a href="{{ path('app_module_new') }}">
+                <button class="btn">Créez un module</button>
+            </a>
+        </div>
+
 
 
     {% else %}
