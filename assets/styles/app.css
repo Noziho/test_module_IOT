@@ -17,6 +17,17 @@ body {
     color: #F1F1F1;
     text-decoration: none;
 }
+
+header {
+    width: 100%;
+    padding: 2rem;
+    box-shadow: rgba(0, 0, 0, 0.12) 0 1px 1px;
+}
+
+header > div > a {
+    color: #1a1d20;
+    margin-inline: 1rem;
+}
 .container {
     display: flex;
     flex-flow: row wrap;

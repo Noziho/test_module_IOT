@@ -74,7 +74,7 @@ class ModuleController extends AbstractController
             $entityManager->persist($module);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_module_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_detail_new', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('module/new.html.twig', [

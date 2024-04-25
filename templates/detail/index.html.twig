@@ -11,7 +11,6 @@
                 <th>Id</th>
                 <th>Manufacturer</th>
                 <th>SerialNumber</th>
-                <th>actions</th>
             </tr>
         </thead>
         <tbody>
@@ -20,10 +19,6 @@
                 <td>{{ detail.id }}</td>
                 <td>{{ detail.manufacturer }}</td>
                 <td>{{ detail.serialNumber }}</td>
-                <td>
-                    <a href="{{ path('app_detail_show', {'id': detail.id}) }}">show</a>
-                    <a href="{{ path('app_detail_edit', {'id': detail.id}) }}">edit</a>
-                </td>
             </tr>
         {% else %}
             <tr>

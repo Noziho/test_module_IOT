@@ -33,7 +33,7 @@ class DetailController extends AbstractController
             $entityManager->persist($detail);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_detail_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_module_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('detail/new.html.twig', [
