@@ -6,6 +6,7 @@ use App\Repository\ModuleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
 class Module
@@ -13,12 +14,15 @@ class Module
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['getModule'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['getModule'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['getModule'])]
     private ?string $description = null;
 
     /**
@@ -31,6 +35,7 @@ class Module
      * @var Collection<int, OperatingHistory>
      */
     #[ORM\OneToMany(targetEntity: OperatingHistory::class, mappedBy: 'module')]
+    #[Groups(['getModule'])]
     private Collection $OperatingHistory;
 
     public function __construct()

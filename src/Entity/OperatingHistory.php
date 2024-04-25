@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\OperatingHistoryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: OperatingHistoryRepository::class)]
 class OperatingHistory
@@ -12,21 +13,27 @@ class OperatingHistory
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['getModule'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['getModule'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['getModule'])]
     private ?string $duration = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['getModule'])]
     private ?string $status = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['getModule'])]
     private ?int $consumedData = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['getModule'])]
     private ?int $dataSent = null;
 
     #[ORM\ManyToOne(inversedBy: 'OperatingHistory')]

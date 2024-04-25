@@ -9,9 +9,11 @@ use App\Repository\OperatingHistoryRepository;
 use App\Service\OperatingHistoryService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/operatingHistory')]
 class OperatingHistoryController extends AbstractController
@@ -19,15 +21,18 @@ class OperatingHistoryController extends AbstractController
 
     private OperatingHistoryService $historyService;
     private ModuleRepository $moduleRepository;
+    private SerializerInterface $serializer;
 
     /**
      * @param OperatingHistoryService $historyService
      * @param ModuleRepository $moduleRepository
+     * @param SerializerInterface $serializer
      */
-    public function __construct(OperatingHistoryService $historyService, ModuleRepository $moduleRepository)
+    public function __construct(OperatingHistoryService $historyService, ModuleRepository $moduleRepository, SerializerInterface $serializer)
     {
         $this->historyService = $historyService;
         $this->moduleRepository = $moduleRepository;
+        $this->serializer = $serializer;
     }
 
 
@@ -100,8 +105,10 @@ class OperatingHistoryController extends AbstractController
     public function generateRandomOperatingHistory(): Response
     {
         $this->historyService->generateRandomOperatingHistory();
-        return $this->render('module/index.html.twig', [
-            'modules' => $this->moduleRepository->findAll(),
-        ]);
+
+        return new JsonResponse(
+            $this->serializer->serialize($this->moduleRepository->findAll(), 'json', ['groups' => 'getModule']),
+            Response::HTTP_OK, [], true
+        );
     }
 }
