@@ -30,34 +30,37 @@ function generateCharts(r)
     for (let i = 0; i < modules.length; i++) {
         let canvas = document.createElement('canvas');
         canvas.id = "canvas" + i;
-        card[i].append(canvas);
+        if (card[i]) {
+            card[i].append(canvas);
 
-        let ctx = document.getElementById('canvas' + i);
+            let ctx = document.getElementById('canvas' + i);
 
-        charts.push(
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Données consommées', 'Données envoyées'],
-                    datasets: [{
-                        label: 'Données utilisé/envoyées en go',
-                        data:
-                            [
-                                r[i].OperatingHistory[r[i].OperatingHistory.length -1].consumedData,
-                                r[i].OperatingHistory[r[i].OperatingHistory.length -1].dataSent,
-                            ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+            charts.push(
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Données consommées', 'Données envoyées'],
+                        datasets: [{
+                            label: 'Données utilisé/envoyées en go',
+                            data:
+                                [
+                                    r[i].OperatingHistory[r[i].OperatingHistory.length -1].consumedData,
+                                    r[i].OperatingHistory[r[i].OperatingHistory.length -1].dataSent,
+                                ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            })
-        )
+                })
+            )
+        }
+
     }
 }
 /**
