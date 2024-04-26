@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Module;
+use App\Entity\OperatingHistory;
 use App\Form\ModuleType;
 use App\Repository\ModuleRepository;
 use App\Service\ModuleService;
 use App\Service\OperatingHistoryService;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -73,6 +75,8 @@ class ModuleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($module);
             $entityManager->flush();
+
+            $this->historyService->generateRandomOperatingHistory();
 
             return $this->redirectToRoute('app_detail_new', [], Response::HTTP_SEE_OTHER);
         }

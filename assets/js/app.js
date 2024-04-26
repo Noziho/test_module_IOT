@@ -1,5 +1,7 @@
 import Chart from 'chart.js/auto';
 
+//This const can be changed it depend on what interval u need a operatingHistory
+const HISTORY_INTERVAL = 1000;
 let startBtn = document.querySelector('#startBtn');
 let automaticBtn = document.querySelector('#automatic_btn');
 let card = document.querySelectorAll('.card');
@@ -116,6 +118,56 @@ function removeErrorMessages()
     })
 }
 
+/**
+ * This method generate a history for each module and refresh the display
+ */
+function getRandomHistoryAndDisplay(){
+    fetch('http://localhost:8000/operatingHistory/random')
+        .then(r => r.json())
+        .then(r => {
+
+            for (let i = 0; i < modules.length; i++) {
+                let OperatingHistoryDuration = r[i].OperatingHistory[r[i].OperatingHistory.length -1].duration;
+                let OperatingHistoryData = r[i].OperatingHistory[r[i].OperatingHistory.length -1].consumedData;
+                let OperatingHistorySentData = r[i].OperatingHistory[r[i].OperatingHistory.length -1].dataSent;
+                let OperatingHistoryStatus = r[i].OperatingHistory[r[i].OperatingHistory.length -1].status;
+                if (status[i]){
+                    status[i].innerHTML= "Status: " + OperatingHistoryStatus;
+
+                    generateErrorMessages(OperatingHistoryStatus, r[i].id);
+
+                    //Removing old data
+                    removeData(charts[i]);
+                    removeData(charts[i]);
+                    //Add new data to the charts
+                    addData(charts[i], 'Données consomées', OperatingHistoryData);
+                    addData(charts[i], 'Données envoyées', OperatingHistorySentData);
+
+                    if (!OperatingHistoryDuration) {
+                        duration[i].innerHTML= "Durée d'utilisation actuelle (h): ";
+                    }
+                    else {
+                        duration[i].innerHTML= "Durée d'utilisation actuelle (h): " + OperatingHistoryDuration;
+                    }
+
+                    if (!OperatingHistoryData) {
+                        dataConsumed[i].innerHTML= "Données consommées (go): ";
+                    }
+                    else {
+                        dataConsumed[i].innerHTML= "Données consommées (go): " + OperatingHistoryData;
+                    }
+
+                    if (!OperatingHistorySentData ) {
+                        sentData[i].innerHTML= "Données envoyées (go): ";
+                    }
+                    else {
+                        sentData[i].innerHTML= "Données envoyées (go): " + OperatingHistorySentData;
+                    }
+                }
+            }
+        })
+}
+
 
 //Fetching to get all module data including details and operatingHistory
 fetch('http://localhost:8000/module/getAll')
@@ -126,54 +178,15 @@ fetch('http://localhost:8000/module/getAll')
         })
 
         generateCharts(r);
+        //This call is for avoid to wait 30 sec again when u switch page, every time u switch ur page a random history will be generated, like that u doesn't have to wait 30 sec because the set interval will reset to 30sec each time u switch page
+        //getRandomHistoryAndDisplay();
 
         if (modules.length > 0) {
             setInterval(() => {
-                removeErrorMessages()
-                //Fetching to generate a random OperatingHistory for all module
-                fetch('http://localhost:8000/operatingHistory/random')
-                    .then(r => r.json())
-                    .then(r => {
+                removeErrorMessages();
+                getRandomHistoryAndDisplay();
 
-                        for (let i = 0; i < modules.length; i++) {
-                            let OperatingHistoryDuration = r[i].OperatingHistory[r[i].OperatingHistory.length -1].duration;
-                            let OperatingHistoryData = r[i].OperatingHistory[r[i].OperatingHistory.length -1].consumedData;
-                            let OperatingHistorySentData = r[i].OperatingHistory[r[i].OperatingHistory.length -1].dataSent;
-                            let OperatingHistoryStatus = r[i].OperatingHistory[r[i].OperatingHistory.length -1].status;
-                            status[i].innerHTML= "Status: " + OperatingHistoryStatus;
-
-                            generateErrorMessages(OperatingHistoryStatus, r[i].id);
-
-                            //Removing old data
-                            removeData(charts[i]);
-                            removeData(charts[i]);
-                            //Add new data to the charts
-                            addData(charts[i], 'Données consomées', OperatingHistoryData);
-                            addData(charts[i], 'Données envoyées', OperatingHistorySentData);
-
-                            if (!OperatingHistoryDuration) {
-                                duration[i].innerHTML= "Durée d'utilisation actuelle (h): ";
-                            }
-                            else {
-                                duration[i].innerHTML= "Durée d'utilisation actuelle (h): " + OperatingHistoryDuration;
-                            }
-
-                            if (!OperatingHistoryData) {
-                                dataConsumed[i].innerHTML= "Données consommées (go): ";
-                            }
-                            else {
-                                dataConsumed[i].innerHTML= "Données consommées (go): " + OperatingHistoryData;
-                            }
-
-                            if (!OperatingHistorySentData ) {
-                                sentData[i].innerHTML= "Données envoyées (go): ";
-                            }
-                            else {
-                                sentData[i].innerHTML= "Données envoyées (go): " + OperatingHistorySentData;
-                            }
-                        }
-                    })
-            }, 30000);
+            }, HISTORY_INTERVAL);
         }
     })
 

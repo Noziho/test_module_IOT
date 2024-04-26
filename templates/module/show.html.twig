@@ -7,9 +7,26 @@
 
     <div class="module m-2 w-50 m-auto p-4 mt-5">
         <div>
-                <p class="card-text">Id: {{ module.id }}</p>
-                <p class="card-text">Nom: {{ module.name }}</p>
-                <p class="card-text">Description: {{ module.description }}</p>
+            <p>Id: {{ module.id }}</p>
+            <p>Nom: {{ module.name }}</p>
+            <p>Description: {{ module.description }}</p>
+            {% for detail in module.getDetail %}
+                <p>Fabricant: {{ detail.manufacturer }}</p>
+                <p>Numéro de série: {{ detail.serialNumber }}</p>
+            {% endfor %}
+
+            {% set duration = 0 %}
+            {% set consumedData = 0 %}
+            {% set dataSent = 0 %}
+
+            {% for operatingHistory in module.operatingHistory %}
+                {% set duration =  duration + operatingHistory.duration %}
+                {% set consumedData =  consumedData + operatingHistory.consumedData %}
+                {% set dataSent =  dataSent + operatingHistory.dataSent %}
+            {% endfor %}
+            <p>Durée total d'utilisation du module: {{ duration ~ "h"}}</p>
+            <p>Données total consommées: {{ consumedData ~ " go"}}</p>
+            <p>Données total envoyées: {{ dataSent ~ " go"}}</p>
         </div>
     </div>
 
