@@ -74,6 +74,7 @@ header > div > a {
 }
 
 .messageContainer {
+    min-height: 21rem;
     max-height: 21rem;
     margin: 0 auto;
     width: 70%;
