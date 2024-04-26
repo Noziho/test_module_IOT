@@ -22,5 +22,7 @@
     HISTORY_INTERVAL présente ligne 2 de app.js, actuellement toute les secondes.
 
     Si vous l'augmentez, à chaque changement de page le set interval va être réinitialiser donc l'écart sera bien plus visible
-    concernant l'obtention de l'historique pour éviter cela si vous le souhaitez, il suffit de décommenter la ligne 183 de app.js,
+    concernant l'obtention de l'historique pour éviter cela si vous le souhaitez, il suffit de décommenter la ligne 182 de app.js,
     cela permet de générer directement un historique sans attendre 30 secondes entre chaque changement.
+
+    Pour finir, si vous souhaitez supprimé un module rendez vous dans votre SGBDR pour paramétré le comportement souhaiter sur la supression
