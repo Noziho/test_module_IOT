@@ -40,35 +40,7 @@ function removeData(chart) {
     chart.update();
 }
 
-//Generate all canvas for create new charts for each module.
-for (let i = 0; i < ids.length; i++) {
-    let canvas = document.createElement('canvas');
-    canvas.id = "canvas" + i;
-    card[i].append(canvas);
 
-    let ctx = document.getElementById('canvas' + i);
-
-    charts.push(
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Données consommées', 'Données envoyées'],
-                datasets: [{
-                    label: 'Données utilisé/envoyées en go',
-                    data: [0, 0],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        })
-    )
-}
 
 //Adding click event for redirect.
 if (startBtn) {
@@ -90,6 +62,37 @@ fetch('http://localhost:8000/module/getAll')
         r.forEach((item) => {
             modules.push(item)
         })
+//Generate all canvas for create new charts for each module.
+        for (let i = 0; i < ids.length; i++) {
+            let canvas = document.createElement('canvas');
+            canvas.id = "canvas" + i;
+            card[i].append(canvas);
+
+            let ctx = document.getElementById('canvas' + i);
+
+            charts.push(
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Données consommées', 'Données envoyées'],
+                        datasets: [{
+                            label: 'Données utilisé/envoyées en go',
+                            data: [
+                                r[i].OperatingHistory[r[i].OperatingHistory.length -1].consumedData,
+                                r[i].OperatingHistory[r[i].OperatingHistory.length -1].dataSent],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                })
+            )
+        }
 
         if (modules.length > 0) {
             setInterval(() => {
